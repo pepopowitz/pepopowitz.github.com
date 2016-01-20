@@ -11,9 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "del": "^2.2.0",
+    "jade": "^1.11.0",
     "metalsmith": "^2.1.0",
     "metalsmith-cleanscript": "0.0.4",
     "metalsmith-jade": "^2.0.2",
+    "metalsmith-layouts": "^1.4.2",
     "metalsmith-serve": "0.0.7",
     "metalsmith-watch": "^1.0.1"
   },

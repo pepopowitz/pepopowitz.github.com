@@ -2,6 +2,8 @@ var metalsmith = require('metalsmith');
 var jade = require('metalsmith-jade');
 var watch = require('metalsmith-watch');
 var serve = require('metalsmith-serve');
+var layouts = require('metalsmith-layouts');
+
 var opener = require('opener');
 var execFile = require('child_process').execFile;
 var path = require('path');
@@ -13,6 +15,10 @@ var pipeline = metalsmith(__dirname)
     .source('./content')
     .use(jade({
         useMetadata: true
+    }))
+    .use(layouts({
+        engine: 'jade',
+        directory: 'layouts'
     }));
 
 var port = 3487;
@@ -25,8 +31,11 @@ if (runAsServer) {
             verbose: true
         }))
         .use(watch({
-            pattern: '**/*',
-            livereload: true
+            paths: {
+                "${source}/**/*": true,
+                "layouts/**/*": "**/*.jade"
+            },
+            livereload: false
         }));
 }
 
