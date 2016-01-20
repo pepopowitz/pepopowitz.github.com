@@ -4,11 +4,22 @@
   "description": "github page for Steven J Hicks",
   "main": "index.js",
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "start": "node build.js --server"
   },
   "author": "Steven J Hicks",
   "license": "ISC",
   "dependencies": {
-    "metalsmith": "^2.1.0"
+    "del": "^2.2.0",
+    "metalsmith": "^2.1.0",
+    "metalsmith-cleanscript": "0.0.4",
+    "metalsmith-jade": "^2.0.2",
+    "metalsmith-serve": "0.0.7",
+    "metalsmith-watch": "^1.0.1"
+  },
+  "devDependencies": {
+    "express": "^4.13.3",
+    "opener": "^1.4.1",
+    "path": "^0.12.7"
   }
 }

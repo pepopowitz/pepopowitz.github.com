@@ -1,3 +1,11 @@
+tasks:
+    npm run build - 
+        generates the content
+    npm start -
+        generates the content & starts a static server
+
+
+
 to run the build - 
     node build.js
     
@@ -12,3 +20,23 @@ or, add npm scripts -
   and do 
   
     npm run build
+    
+to run the site locally - 
+    node build.js --server
+or, add npm script - 
+    "scripts":{
+        ...
+        "start": "node build.js --server"
+    }
+    and do 
+    
+        npm start
+
+TODO - 
+templates
+bootstrap
+    sass
+permalinks
+collections
+snippets
+navigation
