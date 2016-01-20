@@ -33,10 +33,11 @@ or, add npm script -
         npm start
 
 TODO - 
-templates
 bootstrap
     sass
 permalinks
 collections
 snippets
 navigation
+highlight.js for syntax highlighting
+http://purecss.io/layouts/ instead of bootstrap?

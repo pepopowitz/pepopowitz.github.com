@@ -1,8 +1,4 @@
-doctype html
-html(lang="en")
-    head
-        title Steven J Hicks
-    body
-        .container
-            .row       
-                article!= contents
+extends ./layout.jade
+
+block content
+    article!= contents

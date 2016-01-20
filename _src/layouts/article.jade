@@ -1,11 +1,10 @@
-doctype html
-html(lang="en")
-    head
-        title= title
-            |  - Steven J Hicks
-    body
-        .container
-            .row       
-                h1= title
-                div.timestamp= date
-                article!= contents
+extends ./layout.jade
+
+block title
+    title= title
+        |  - Steven J Hicks
+
+block content
+    h1= title
+    div.timestamp= date
+    article!= contents

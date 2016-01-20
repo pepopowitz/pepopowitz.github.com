@@ -3,6 +3,7 @@ var jade = require('metalsmith-jade');
 var watch = require('metalsmith-watch');
 var serve = require('metalsmith-serve');
 var layouts = require('metalsmith-layouts');
+var sass = require('metalsmith-sass');
 
 var opener = require('opener');
 var execFile = require('child_process').execFile;
@@ -19,6 +20,14 @@ var pipeline = metalsmith(__dirname)
     .use(layouts({
         engine: 'jade',
         directory: 'layouts'
+    }))
+    .use(sass({
+        sourceMap: true,
+        sourceMapContents: true,   // This will embed all the Sass contents in your source maps.
+        outputDir: function (originalPath) { 
+            // this will change scss/some/path to css/some/path
+            return originalPath.replace("scss", "css");
+        }
     }));
 
 var port = 3487;
