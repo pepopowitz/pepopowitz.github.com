@@ -71,16 +71,24 @@ p This is progress, as the build succeeds! It is also the solution described in
     | Unfortunately, as that answer also describes, there is NO cleanup running now, so files deleted from _src are not going to be deleted in the generated content.
 
 
-h4 Metalsmith-cleanscript ftw
-p Close to throwing in the towel, I found 
-    a(href='https://github.com/srcreigh/metalsmith-cleanscript') metalsmith-cleanscript.
-    | This allows me to write a custom cleanup script, disable the default metalsmith cleanup, and use mine instead.
-
    
  
-
+h4 A custom cleanup step
+p So now we need to build a step into the pipeline to do a custom cleanup. Metalsmith is easily extended...
+h4 A custom cleanup script
+p how to delete all files except _cleanup.bat and _src
+p http://stackoverflow.com/questions/558648/how-can-i-delete-all-files-subdirs-except-for-some-files-in-dos
 
 h4 Workarounds I didn't like
 ul
     li Don't host on Github Pages. Hosting on something like netlify.com let's you deploy a specific folder. I like netlify, but for my own blog, I wanted to use Github Pages. I like the sound of a .github.io domain.
     li Store the source in a separate repo, and push only the generated folder to the Github Pages repo. I'd rather keep all the datas in one repo, since they are all dealing with one site.
+
+
+
+
+h4 Metalsmith-cleanscript ftw
+p Close to throwing in the towel, I found 
+    a(href='https://github.com/srcreigh/metalsmith-cleanscript') metalsmith-cleanscript.
+    | This allows me to write a custom cleanup script, disable the default metalsmith cleanup, and use mine instead.
+

@@ -4,6 +4,8 @@ var watch = require('metalsmith-watch');
 var serve = require('metalsmith-serve');
 var layouts = require('metalsmith-layouts');
 var sass = require('metalsmith-sass');
+var permalinks = require('metalsmith-permalinks');
+var metalStatic = require('metalsmith-static');
 
 var opener = require('opener');
 var execFile = require('child_process').execFile;
@@ -28,7 +30,8 @@ var pipeline = metalsmith(__dirname)
             // this will change scss/some/path to css/some/path
             return originalPath.replace("scss", "css");
         }
-    }));
+    }))
+    .use(permalinks());
 
 var port = 3487;
 var parentDir = path.resolve(process.cwd(), '..');

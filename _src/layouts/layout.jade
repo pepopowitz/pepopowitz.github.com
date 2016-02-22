@@ -3,8 +3,12 @@ html(lang="en")
     head
         block title
             title Steven J Hicks
-        link(rel='stylesheet', href='/css/site.css')
+        link(rel='stylesheet', href='/static/css/site.css')
     body
+        nav.navbar.navbar-inverse.navbar-fat
+            div.container-fluid
+                div.navbar-header
+                    //a.navbar-brand(href='#') SJH
         .container
             .row       
                 block content
