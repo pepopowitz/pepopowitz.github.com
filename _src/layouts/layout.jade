@@ -5,11 +5,15 @@ html(lang="en")
             title Steven J Hicks
         link(rel='stylesheet', href='/static/css/site.css')
     body
-        nav.navbar.navbar-inverse.navbar-fat
+        nav.navbar.navbar-inverse.navbar-fat.navbar-default.navbar-static-top
             div.container-fluid
                 div.navbar-header
-                    //a.navbar-brand(href='#') SJH
+                    a.navbar-brand(href='/') Steven J Hicks
+                    a.navbar-brand(href='/about') About
         .container
             .row       
                 block content
-                    
+            footer.row 
+                hr
+                h6 I built this site with 
+                    a(href='http://www.metalsmith.io/') metalsmith.io.                    

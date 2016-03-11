@@ -13,40 +13,36 @@ p I was wrong.
 h4 Target content structure
 p Here's what I want my structure to look like, in order to deploy to Github Pages - 
 
-p.
-    .
-    ├── _src
-    |   ├── content
-    |   |   ├── blog
-    |   |   |   └── 2016/01/post.jade    
-    |   |   └── index.jade
-    |   ├── layouts
-    |   ├── node_modules
-    |   ├── build.js
-    |   ├── package.json
-    |   └── site.less
-    ├── index.html  --my generated homepage
-    ├── blog
-    |   └── 2016/01/post/index.html     --my generated blog posts
-    └── site.css  --my generated css
+p
+    pre.
+        ├── _src
+        |   ├&#195;── content
+        |   |   ├── blog
+        |   |   |   └── 2016/01/post.jade    
+        |   |   └── index.jade
+        |   ├── layouts
+        |   ├── node_modules
+        |   ├── build.js
+        |   ├── package.json
+        |   └── site.less
+        ├── index.html  --my generated homepage
+        ├── blog
+        |   └── 2016/01/post/index.html     --my generated blog posts
+        └── site.css  --my generated css
 
 p Everything in the _src folder is pre-generated, and everything else in the root is generated. Github Pages will ignore any folder that begins with _, so the only things that end up in pleepleus88.github.io are the things I want to be there.
 
 h4 You cannot delete yourself
 p Step 1 was to modify my build script to generate the content into the root folder. This...
-    div.
+    pre.
         metalsmith(__dirname)
             .source('./content')
             .use(....)
             .destination('./build')
-            .build(function (err) {
-                if (err) {
-                    throw err;
-                }
-            });
+            .build(...);
     
     | became this.....
-    div.
+    pre.
         metalsmith(__dirname)
             .source('./content')
             .use(....)
@@ -58,7 +54,7 @@ p This results in metalsmith trying to delete the _src folder, which is not AT A
         Error: EBUSY, resource busy or locked....
     | So the first step to solving the problem is turning off auto-clean within my metalsmith build script.
 p Now my build script became this: 
-    div.
+    pre.
         metalsmith(__dirname)
             .source('./content')
             .use(....)

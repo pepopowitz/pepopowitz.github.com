@@ -33,9 +33,6 @@ or, add npm script -
         npm start
 
 TODO - 
-bootstrap
-    sass
-permalinks
 collections
 snippets
 navigation
