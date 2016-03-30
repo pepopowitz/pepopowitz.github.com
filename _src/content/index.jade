@@ -1,18 +1,23 @@
 ---
 title: Steven J Hicks
-date: 2016-01-19 09:00
+date: March 19, 2016
 layout: home.jade
 ---
 
 .jumbotron
-  h1 pleepleus88.github.io
   h2 Steven J Hicks
   .lead Crushing 1s and 0s since 1999.
 .row
   .col-lg-12
     h4 Recent Stuff
-      article
-        h1 Static Site Generators Are The New WordPress.
-        p I recently presented at MKE Web Pros, about static site generators. 
-            a(href='/presentations/staticgen') Here's some info about it.
+    each article in collections.articles
+      article.content-article
+        header
+          h2 
+            a(href='/' + article.url)= article.title
+          h6= article.date
+          p= article.snippet
+          p
+            a(href='/' + article.url) Read about it!
+
         

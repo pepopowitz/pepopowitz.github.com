@@ -38,3 +38,8 @@ snippets
 navigation
 highlight.js for syntax highlighting
 http://purecss.io/layouts/ instead of bootstrap?
+
+
+problems - 
+using collections should add a "path" property to every item in collection. according to console.log, it DOES. but index.jade writes empty values for all of the paths. wtf? 
+    temporary hack is to specify url in the frontmatter, and spit out that one instead. 
