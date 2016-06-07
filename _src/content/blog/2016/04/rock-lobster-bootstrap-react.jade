@@ -1,0 +1,27 @@
+---
+title: Adding BootStrap to Rock Lobster (React)
+date: April 12, 2016
+sortableDate: 04/12/2016 12:00:00
+layout: article.jade
+snippet: Getting started with React was pretty easy. How quickly can I get BootStrap hooked up?
+url: blog/2016/04/rock-lobster-bootstrap-react
+tags: rocklobster, react
+draft: true
+---
+h3 ???
+p scss support is built in
+ul
+    li rename src/styles/app.css to app.scss
+    li update references to app.css to app.scss
+        p src/components/main.js
+            | require('styles/app.scss');
+    li install bootstrap
+        pre npm install --save bootstrap-sass
+    li include bootstrap scss
+        | src/styles/app.scsss
+            :code
+                @import './node_modules/bootstrap-sass/assets/stylesheets/_bootstrap-sprockets';
+                @import './node_modules/bootstrap-sass/assets/stylesheets/_bootstrap';
+        | note that overridden variables will go BEFORE the imports.
+ p references
+    https://www.npmjs.com/package/bootstrap-sass

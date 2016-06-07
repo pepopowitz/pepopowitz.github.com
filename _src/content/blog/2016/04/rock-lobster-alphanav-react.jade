@@ -1,0 +1,26 @@
+---
+title: Building the alphanav in Rock Lobster (React)
+date: April 12, 2016
+sortableDate: 04/12/2016 14:00:00
+layout: article.jade
+snippet: We are all set up! Let's start building some stuff. First, an alphabetic navigation to browse our library.
+url: blog/2016/04/rock-lobster-alphanav-react
+tags: rocklobster, react
+draft: true
+---
+h3 ???
+p Build static components first
+pre.
+    AlphaNav
+        AlphaNavLetter (a)
+        AlphaNavLetter (b) 
+        AlphaNavLetter (c)
+        AlphaNavLetter (d)
+        ....
+            
+p loading initial state asynchronously
+    | https://www.npmjs.com/package/redux-async-initial-state
+    
+p One thing that shocks me is that every example of react assumes you are retrieving/accessing data synchronously. 
+    | In what world do we live that ANYTHING is done synchronously?
+    | The examples should all be doing data access asynchronously. 

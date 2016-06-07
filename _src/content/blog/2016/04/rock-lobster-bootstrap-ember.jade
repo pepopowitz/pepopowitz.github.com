@@ -1,0 +1,25 @@
+---
+title: Adding BootStrap to Rock Lobster (Ember)
+date: April 11, 2016
+sortableDate: 04/11/2016 12:00:00
+layout: article.jade
+snippet: Setup with Ember was stupid simple. How quickly can I get BootStrap hooked up?
+url: blog/2016/04/rock-lobster-bootstrap-ember
+tags: rocklobster, ember
+draft: true
+---
+h3 ???
+p ???  
+p add-on = https://emberobserver.com/
+    | https://emberobserver.com/addons/ember-cli-sass
+    | ember install ember-cli-sass
+    | rename app.css to app.scss
+p install bootstrap
+    | bower install --save bootstrap-sass
+p include bootstrap scss
+    | add line to app.scss 
+        | @import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+p references
+    | http://emberigniter.com/integrating-sass-bootstrap-ember-components/
+    | http://stackoverflow.com/a/33324031/1585069
+    

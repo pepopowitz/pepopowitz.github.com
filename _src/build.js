@@ -33,7 +33,7 @@ var pipeline = metalsmith(__dirname)
         {
             articles: {
                 pattern: 'blog/**/*.jade',
-                sortBy: 'date',
+                sortBy: 'sortableDate',
                 reverse: true
             }
         }
@@ -90,7 +90,9 @@ pipeline
         });
     })
     .use(redirect({
-        '/presentations/staticgen': '/blog/2016/03/staticgen'
+        '/presentations/staticgen': '/blog/2016/03/staticgen',
+        '/wordpress-runs-25-percent': 'http://w3techs.com/technologies/details/cm-wordpress/all/all',
+        '/wordpress-vulnerabilities': 'http://www.wpwhitesecurity.com/wordpress-security-news-updates/statistics-70-percent-wordpress-installations-vulnerable/'
     }))
     .destination('../')
     .build(function(err) {
