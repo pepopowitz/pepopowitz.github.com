@@ -8,3 +8,14 @@ block content
     h1= title
     div.timestamp= date
     article!= contents
+
+    hr
+    
+    div(id="disqus_thread")
+        script.
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = '//pleepleus88githubio.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
