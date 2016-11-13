@@ -10,6 +10,7 @@ var drafts = require('metalsmith-drafts');
 var collections = require('metalsmith-collections');
 var snippets = require('metalsmith-snippet');
 var redirect = require('metalsmith-redirect');
+var markdown = require('metalsmith-markdown');
 
 var opener = require('opener');
 var execFile = require('child_process').execFile;
@@ -23,7 +24,7 @@ var pipeline = metalsmith(__dirname)
     .use(sass({
         sourceMap: true,
         sourceMapContents: true,   // This will embed all the Sass contents in your source maps.
-        outputDir: function (originalPath) { 
+        outputDir: function (originalPath) {
             // this will change scss/some/path to css/some/path
             return originalPath.replace("scss", "css");
         }
@@ -38,18 +39,21 @@ var pipeline = metalsmith(__dirname)
             }
         }
     ))
+    .use(markdown())
     //jade must come after collections.
     .use(jade({
         useMetadata: true,
-        filters:{code : function( block ) {
-            return block
-                .replace( /&/g, '&amp;'  )
-                .replace( /</g, '&lt;'   )
-                .replace( />/g, '&gt;'   )
-                .replace( /"/g, '&quot;' )
-                .replace( /#/g, '&#35;'  )
-                .replace( /\\/g, '\\\\'  );
-        }}
+        filters: {
+            code: function (block) {
+                return block
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/#/g, '&#35;')
+                    .replace(/\\/g, '\\\\');
+            }
+        }
     }))
     .use(layouts({
         engine: 'jade',
@@ -57,13 +61,13 @@ var pipeline = metalsmith(__dirname)
     }))
     .use(permalinks())
     .use(snippets({
-      stop: ['<span class="more">']
+        stop: ['<span class="more">']
     }))
     ;
 
 var port = 3487;
 var parentDir = path.resolve(process.cwd(), '..');
-    
+
 if (runAsServer) {
     pipeline
         .use(serve({
@@ -84,7 +88,7 @@ pipeline
     .use(function (files, metalsmith, done) {
         execFile('cleanup.bat', { cwd: parentDir }, function (err, stdout, stderr) {
             if (err) {
-                console.log('Error executing cleanup.bat: ',err);
+                console.log('Error executing cleanup.bat: ', err);
             }
             done();
         });
@@ -95,7 +99,7 @@ pipeline
         '/wordpress-vulnerabilities': 'http://www.wpwhitesecurity.com/wordpress-security-news-updates/statistics-70-percent-wordpress-installations-vulnerable/'
     }))
     .destination('../')
-    .build(function(err) {
+    .build(function (err) {
         if (err) {
             throw err;
         }
