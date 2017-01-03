@@ -1,7 +1,7 @@
 ---
 title: Maybe I was wrong about React
 date: April 7, 2016
-sortableDate: 04/07/2016
+sortableDate: 2016/04/07
 layout: article.jade
 snippet: Setting up a React project proved to be a challenge for me the first time I tried to learn it. It went a little better the second time around.
 url: blog/2016/04/maybe-i-was-wrong-about-react
@@ -9,38 +9,38 @@ tags: react
 draft: false
 ---
 h3 So many places to start
-p There are a lot of examples of how to set up a project with React, and very little direction on the best route. The first time I tried to do this, I ended up with a whole lot of analysis paralysis, 
+p There are a lot of examples of how to set up a project with React, and very little direction on the best route. The first time I tried to do this, I ended up with a whole lot of analysis paralysis,
     | and couldn't figure out where to even start.
 h3 It depends on how you learn
-p A lot of the advice you get on how to learn React and its ecosystem is to learn each individual piece, one thing at a time. Definitely DO NOT start 
-    | with a "starter kit", they say. That isn't going to teach you anything, they say. 
+p A lot of the advice you get on how to learn React and its ecosystem is to learn each individual piece, one thing at a time. Definitely DO NOT start
+    | with a "starter kit", they say. That isn't going to teach you anything, they say.
 p But suddenly in retrospect I'm realizing, that is why I struggled so much the first time I tried to learn React. I am not that kind of learner.
     | I am a "give me a real live working example and I will tweak things until they break and learn from all the mistakes I make" kind of learner.
-    | And what is the best way to fire up a working example of something? Yeoman. Find a generator that fits your tech stack, and start there. 
+    | And what is the best way to fire up a working example of something? Yeoman. Find a generator that fits your tech stack, and start there.
 h3 Yo let's do this
-p So off to 
+p So off to
     a.class(href="http://yeoman.io/generators", title="yeoman.io/generators") yeoman.io/generators
     |  we go...where we search for 'react', and get....tons....and tons....of results.
-p 
+p
     img(src='../../../../static/images/yeoman-react.gif')
-p Looking through some of the results, I see one that has the things I'm looking for -  
+p Looking through some of the results, I see one that has the things I'm looking for -
     a.class(href="https://github.com/stylesuxx/generator-react-webpack-redux", title="react-webpack-redux") react-webpack-redux
-    | , which is really an extension of another generator, 
+    | , which is really an extension of another generator,
     a(href='https://github.com/newtriks/generator-react-webpack') react-webpack
     | . The things I want out of the box, and the things this generator offers out of the box, are
     ul
         li Redux
         li ES2015
-        li Unit testing 
+        li Unit testing
         li Sass or Less
 h3 The moment of truth
-p So following the directions, we install the generator via npm, then generate a new site with yeoman. 
+p So following the directions, we install the generator via npm, then generate a new site with yeoman.
     pre yo react-webpack-redux
-p After answering a few questions for setup, comes the moment of truth. If all goes according to plan, I should be able to just start the app with 
+p After answering a few questions for setup, comes the moment of truth. If all goes according to plan, I should be able to just start the app with
     pre npm start
     | and HOLY CRAP I CAN AND IT JUST WORKS OH MY GEEZ HOW MUCH TIME DID I WASTE TRYING TO DO THIS THE LAST TIME!!!
     img(src='../../../../static/images/dancing_banana.gif', style="width:200px")
 h3 The verdict - Oh my goodness this actually is kind of easy!
-p Well, jeez. This was so much easier than the first time I tried to set up a React project. 
-    | I am very pleased. I am beyond very pleased. I am actually in complete disbelief and wish I had thought of this the first time. 
+p Well, jeez. This was so much easier than the first time I tried to set up a React project.
+    | I am very pleased. I am beyond very pleased. I am actually in complete disbelief and wish I had thought of this the first time.
     | This makes learning React a much more tolerable proposition.

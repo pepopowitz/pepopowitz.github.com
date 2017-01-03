@@ -33,7 +33,7 @@ var pipeline = metalsmith(__dirname)
     .use(collections(
         {
             articles: {
-                pattern: 'blog/**/*.jade',
+                pattern: 'blog/**/*.{jade,md}',
                 sortBy: 'sortableDate',
                 reverse: true
             }
@@ -79,7 +79,7 @@ if (runAsServer) {
                 "${source}/**/*": true,
                 "layouts/**/*": "**/*.jade"
             },
-            livereload: false
+            livereload: true
         }));
 }
 
