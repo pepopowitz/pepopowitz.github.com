@@ -11,6 +11,7 @@ var collections = require('metalsmith-collections');
 var snippets = require('metalsmith-snippet');
 var redirect = require('metalsmith-redirect');
 var markdown = require('metalsmith-markdown');
+var metallic = require('metalsmith-metallic');
 
 var opener = require('opener');
 var execFile = require('child_process').execFile;
@@ -39,6 +40,7 @@ var pipeline = metalsmith(__dirname)
             }
         }
     ))
+    .use(metallic())
     .use(markdown())
     //jade must come after collections.
     .use(jade({
