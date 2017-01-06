@@ -1,9 +1,9 @@
 ---
 title: Mocking ES2015 modules
-date: January 4, 2017
-sortableDate: 2017/01/04
+date: January 5, 2017
+sortableDate: 2017/01/05
 layout: article.jade
-snippet: When unit testing your ES2015 code, you'll probably want to mock dependencies. My team had been tolerating some test-induced damage to our code, in order to allow mocking of ES2015 module exports. But recently we discovered a feature of ES2015 modules that allowed us to no longer accept the test-induced damage.
+snippet: When unit testing your ES2015 code, you'll probably want to mock dependencies. My team had been tolerating some test-induced damage to our code, in order to allow mocking of ES2015 module exports. But recently we discovered a feature of ES2015 modules that allowed us eliminate the test-induced damage.
 url: blog/2017/01/mocking-es2015-modules
 ---
 
