@@ -69,7 +69,9 @@ var pipeline = metalsmith(__dirname)
         engine: 'jade',
         directory: 'layouts'
     }))
-    .use(permalinks())
+    .use(permalinks({
+        relative: false
+    }))
     .use(snippets({
         stop: ['<span class="more">']
     }))
