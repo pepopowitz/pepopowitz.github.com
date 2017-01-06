@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[The Blog of Steven J Hicks]]></title><description><![CDATA[The Blog of Steven J Hicks]]></description><link>https://pepopowitz.github.io</link><generator>metalsmith-feed</generator><lastBuildDate>Fri, 06 Jan 2017 03:45:35 GMT</lastBuildDate><atom:link href="https://pepopowitz.github.io/rss.xml" rel="self" type="application/rss+xml"/><author><![CDATA[Steven J Hicks]]></author><item><title><![CDATA[Mocking ES2015 modules]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Mocking ES2015 modules - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Mocking ES2015 modules</h1><div class="timestamp">January 5, 2017</div><article><p>If you&#39;re unit testing code that is using ES2015 modules [<a href="#footnotes">1</a>], you&#39;ll probably point want to mock dependencies at some point. For the most part this is just like mocking things in any code. My tool of choice right now is <a href="https://github.com/jupiter/simple-mock">simple-mock</a>, but there are gajillions of options.</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[The Blog of Steven J Hicks]]></title><description><![CDATA[The Blog of Steven J Hicks]]></description><link>https://pepopowitz.github.io</link><generator>metalsmith-feed</generator><lastBuildDate>Fri, 06 Jan 2017 04:09:37 GMT</lastBuildDate><atom:link href="https://pepopowitz.github.io/rss.xml" rel="self" type="application/rss+xml"/><author><![CDATA[Steven J Hicks]]></author><item><title><![CDATA[Mocking ES2015 modules]]></title><description><![CDATA[<p>If you&#39;re unit testing code that is using ES2015 modules [<a href="#footnotes">1</a>], you&#39;ll probably point want to mock dependencies at some point. For the most part this is just like mocking things in any code. My tool of choice right now is <a href="https://github.com/jupiter/simple-mock">simple-mock</a>, but there are gajillions of options.</p>
 <h3 id="test-induced-damage">Test-induced damage</h3>
 <p>There is some test-induced damage that my team has come to accept with simple-mock, and I am guessing it would be an issue with other mocking libraries like it. While simple-mock is great for mocking functions that are properties on exported objects, it seemed difficult to mock standalone/named exported functions from dependencies.</p>
 <p>So we found this to be easy: [<a href="#footnotes">2</a>]</p>
@@ -134,18 +128,7 @@ describe(<span class="hljs-string">'feature'</span>, <span class="hljs-function"
 <p>[1] If you aren&#39;t unit testing your JS, you should be! It is not as scary as it sounds. You&#39;ll see great improvements to the quality of your front-end code. As an added bonus, the guilt that you probably feel for not testing your JS will disappear.</p>
 <p>[2] <a href="http://mochajs.org/#arrow-functions">Why aren&#39;t you using ES2015 arrow functions in your tests?</a></p>
 <p>[3] I ain&#39;t gonna lie, the discovery of this functionality was, as usual, the result of a <a href="http://stackoverflow.com/a/38414160/1585069">stackoverflow search</a> that I definitely tried a long time ago, but must have narrowly missed.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2017/01/mocking-es2015-modules</link><guid isPermaLink="true">blog/2017/01/mocking-es2015-modules</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 05 Jan 2017 06:00:00 GMT</pubDate></item><item><title><![CDATA[My 2016 recap]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>My 2016 recap - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>My 2016 recap</h1><div class="timestamp">January 3, 2017</div><article><p>2016 was a ...year that happened. Love it or hate it, it happened. At a personal level, I had a pretty fantastic 2016.</p>
+]]></description><link>blog/2017/01/mocking-es2015-modules</link><guid isPermaLink="true">blog/2017/01/mocking-es2015-modules</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 05 Jan 2017 06:00:00 GMT</pubDate></item><item><title><![CDATA[My 2016 recap]]></title><description><![CDATA[<p>2016 was a ...year that happened. Love it or hate it, it happened. At a personal level, I had a pretty fantastic 2016.</p>
 <h3 id="i-discovered-what-i-want-to-do-when-i-grow-up">I discovered what I want to do when I grow up</h3>
 <p>Nevermind that I am a few weeks from being able to say <a href="https://www.youtube.com/watch?v=jXEde89WC44">I&#39;m a man, I&#39;m 40!</a> It was 2016 when I realized what it is I want to do with my career - I want to speak.</p>
 <p>When I was an intern at State Farm in the summer of 1998, I was forced to attend Toastmasters on a regular basis. I hated it. It seemed like a bunch of old people who liked to hear themselves talk.</p>
@@ -180,18 +163,7 @@ ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat nav
 <p>In 2017 I plan to speak a bit more at local meetups. I have a talk scheduled in late January with the local ReactJS meetup group, and I think spreading my brand locally is a great way for me to get regional conferences to notice me.</p>
 <p>And speaking of brand, I know this is something I need to work on in 2017. I am a bad self-marketer, and I need to get better.</p>
 <p>I am also hoping to get into several regional conferences this year. I&#39;m submitting like crazy. It&#39;s not happening as quickly as I want it to, but I know this is what I want to do, so I&#39;m going to keep submitting.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2017/01/my-2016-recap</link><guid isPermaLink="true">blog/2017/01/my-2016-recap</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Tue, 03 Jan 2017 06:00:00 GMT</pubDate></item><item><title><![CDATA[SSIS Is Annoying]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>SSIS Is Annoying - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>SSIS Is Annoying</h1><div class="timestamp">December 1, 2016</div><article><p>The project I&#39;m currently working on requires a spreadsheet to be imported into the database. SSIS seemed like the logical solution to this.</p>
+]]></description><link>blog/2017/01/my-2016-recap</link><guid isPermaLink="true">blog/2017/01/my-2016-recap</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Tue, 03 Jan 2017 06:00:00 GMT</pubDate></item><item><title><![CDATA[SSIS Is Annoying]]></title><description><![CDATA[<p>The project I&#39;m currently working on requires a spreadsheet to be imported into the database. SSIS seemed like the logical solution to this.</p>
 <p>But one month after dealing with SSIS, I am done with it. SSIS is like 85% awesome - but 15% &quot;OMG I hate you&quot;. <a href="https://www.youtube.com/watch?v=QfzDUpB88x4&amp;t=0m24s">I wrote a song about it, like to hear it here it goes</a>.</p>
 <h3 id="ssis-doesn-t-work-consistently-across-machines">SSIS doesn&#39;t work consistently across machines</h3>
 <p>The gist of the package we are building is that it takes an Excel spreadsheet, sanitizes the data, and upserts it into a database.</p>
@@ -231,18 +203,7 @@ ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat nav
 <li>Have that command-line project then execute a bunch of T-SQL that does all your ETL things.</li>
 <li>Hug yourself for avoiding SSIS.</li>
 </ul>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/12/ssis-is-annoying</link><guid isPermaLink="true">blog/2016/12/ssis-is-annoying</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 01 Dec 2016 06:00:00 GMT</pubDate></item><item><title><![CDATA[October Recap]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>October Recap - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>October Recap</h1><div class="timestamp">November 12, 2016</div><article><p>October was a crazy month! Aside from being peak soccer season for my kids, I spoke at Milwaukee Code Camp on the 15th, and MKE DOT NET at the end of the month.</p>
+]]></description><link>blog/2016/12/ssis-is-annoying</link><guid isPermaLink="true">blog/2016/12/ssis-is-annoying</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 01 Dec 2016 06:00:00 GMT</pubDate></item><item><title><![CDATA[October Recap]]></title><description><![CDATA[<p>October was a crazy month! Aside from being peak soccer season for my kids, I spoke at Milwaukee Code Camp on the 15th, and MKE DOT NET at the end of the month.</p>
 <p>First off, thanks to everyone who attended my sessions! I had a great time. I really enjoy the storytelling part of speaking. It is quickly becoming clear to me that stories are how you draw people in.</p>
 <h3 id="milwaukee-code-camp">Milwaukee Code Camp</h3>
 <p>At Milwaukee Code Camp, I presented my static site/JAM stack talk, in the &quot;Backends? Where we&#39;re going we don&#39;t need...backends...&quot; iteration. This talk has undergone constant revision since I first gave it, as I&#39;ve been learning how to do technical speaking. It will change before the next time, too. I had some great feedback from people, and I also noticed some things on my own that I am looking forward to improving.</p>
@@ -258,18 +219,7 @@ ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat nav
 <h3 id="up-next">Up Next</h3>
 <p>My next scheduled talk will be at QA Camp in Milwaukee, on December 8th. I&#39;ll be speaking with a colleague on tightening the feedback loop with TDD and DevOps.</p>
 <p>I&#39;ve also got a couple proposals that I&#39;m awaiting responses from, and I&#39;m looking forward to submitting to as many CFPs as I can in the near future.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/11/october-recap</link><guid isPermaLink="true">blog/2016/11/october-recap</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Sat, 12 Nov 2016 06:00:00 GMT</pubDate></item><item><title><![CDATA[Getting Started With TDD]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Getting Started With TDD - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Getting Started With TDD</h1><div class="timestamp">August 19, 2016</div><article><h3 id="background">Background</h3>
+]]></description><link>blog/2016/11/october-recap</link><guid isPermaLink="true">blog/2016/11/october-recap</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Sat, 12 Nov 2016 06:00:00 GMT</pubDate></item><item><title><![CDATA[Getting Started With TDD]]></title><description><![CDATA[<h3 id="background">Background</h3>
 <p>Recently, a coworker asked me to send him some good resources for introducing a team to TDD. Rather than hoarding the info, this seemed like something I should probably put somewhere for the next person that asks. Much of this is information that I talked about in my &quot;You down with TDD? Yeah you know me&quot; talk that I wish I could give more often.</p>
 <p>There is entirely too much information to fit into one place, so I&#39;ve broken the info down a bit.</p>
 <ul>
@@ -311,18 +261,7 @@ ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat nav
 <p><a href="https://dzone.com/articles/unit-testing-checklist">This is a checklist</a> that helps you write good tests. Your tests are as important as your system code, so you should put effort into writing good, clean test code.</p>
 <h3 id="tdd-is-an-investment">TDD is an investment</h3>
 <p>Hopefully the above resources can help you get started with TDD. Like any other skill, TDD takes practice and patience. It took me years to get from TDD newb to feeling totally comfortable with it, so don&#39;t feel discouraged if it feels difficult at first.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/08/getting-started-with-tdd</link><guid isPermaLink="true">blog/2016/08/getting-started-with-tdd</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Fri, 19 Aug 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[My TDD Sales Pitch]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>My TDD Sales Pitch - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>My TDD Sales Pitch</h1><div class="timestamp">August 18, 2016</div><article><h3 id="background">Background</h3>
+]]></description><link>blog/2016/08/getting-started-with-tdd</link><guid isPermaLink="true">blog/2016/08/getting-started-with-tdd</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Fri, 19 Aug 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[My TDD Sales Pitch]]></title><description><![CDATA[<h3 id="background">Background</h3>
 <p>Recently, a coworker asked me to send him some good resources for introducing a team to TDD. Rather than hoarding the info, this seemed like something I should probably put somewhere for the next person that asks. Much of this is information that I talked about in my &quot;You down with TDD? Yeah you know me&quot; talk that I wish I could give more often.</p>
 <p>There is entirely too much information to fit into one place, so I&#39;ve broken the info down a bit.</p>
 <ul>
@@ -364,36 +303,14 @@ ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat nav
 <li><strong>TDD is not a silver bullet.</strong> Yeah, it&#39;s not. Nothing is. But that doesn&#39;t mean it doesn&#39;t have value.</li>
 </ul>
 <p>That&#39;s my sales pitch. Next up I&#39;ll list <a href="/blog/2016/08/getting-started-with-tdd">a few good resources for getting started with TDD</a>.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/08/my-tdd-sales-pitch</link><guid isPermaLink="true">blog/2016/08/my-tdd-sales-pitch</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 18 Aug 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Back-ends? Where we're going, we don't need...back-ends.....]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Back-ends? Where we're going, we don't need...back-ends..... - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Back-ends? Where we're going, we don't need...back-ends.....</h1><div class="timestamp">June 10, 2016</div><article><p>I got to present at this year&#39;s Chicago Coder Conference, about static site generators and the &quot;JAM stack.&quot; This is a talk I&#39;ve been doing variations of here and there for about six months. It was the first time I&#39;ve been lucky enough to present at a conference.</p>
+]]></description><link>blog/2016/08/my-tdd-sales-pitch</link><guid isPermaLink="true">blog/2016/08/my-tdd-sales-pitch</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 18 Aug 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Back-ends? Where we're going, we don't need...back-ends.....]]></title><description><![CDATA[<p>I got to present at this year&#39;s Chicago Coder Conference, about static site generators and the &quot;JAM stack.&quot; This is a talk I&#39;ve been doing variations of here and there for about six months. It was the first time I&#39;ve been lucky enough to present at a conference.</p>
 <p>I had a great time! I was a bit disheartened by the fact that I&#39;d been time-slotted up against Uncle Bob, and I even told everyone I met the first day of the conference that they should go listen to him instead of me. It was an honor to be speaking at the same venue as him, he is an amazing speaker and a role model for me. I just wish I hadn&#39;t had to compete with him for listeners....</p>
 <p>Still, I had about 15 people come hang out and listen to me. I had great conversation with several of them before and after my talk. I&#39;ve been going into these things with the thought that if I get two people to legitimately listen to what I have to say, and I can legitimately help them, it is a win. In this case, I think I definitely met that goal, and I am pretty hungry to speak again soon.</p>
 <p>As much as I hate taking selfies, I did convince myself to take one on my way out of town. The squatty looking building in the background, the Gleacher Center, is where I spoke.</p>
 <p><img src="/static/images/chicagocoderconf.jpg" alt="Steven Hicks at Chicago Coder Conference"></p>
 <h4 id="slides">Slides</h4>
 <p><a href="/static/other/backends.pptx">Here are my slides from the talk.</a> They don&#39;t work very well on SlideShare because of all the animations, so here they are in all their PowerPoint glory.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/06/chicago-coder-conference</link><guid isPermaLink="true">blog/2016/06/chicago-coder-conference</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Fri, 10 Jun 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Maybe I was wrong about React]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Maybe I was wrong about React - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Maybe I was wrong about React</h1><div class="timestamp">April 7, 2016</div><article><h3 id="so-many-places-to-start">So many places to start</h3>
+]]></description><link>blog/2016/06/chicago-coder-conference</link><guid isPermaLink="true">blog/2016/06/chicago-coder-conference</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Fri, 10 Jun 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Maybe I was wrong about React]]></title><description><![CDATA[<h3 id="so-many-places-to-start">So many places to start</h3>
 <p>There are a lot of examples of how to set up a project with React, and very little direction on the best route. The first time I tried to do this, I ended up with a whole lot of analysis paralysis, and couldn&#39;t figure out where to even start.</p>
 <h3 id="it-depends-on-how-you-learn">It depends on how you learn</h3>
 <p>A lot of the advice you get on how to learn React and its ecosystem is to learn each individual piece, one thing at a time. Definitely DO NOT start with a &quot;starter kit&quot;, they say. That isn&#39;t going to teach you anything, they say.</p>
@@ -418,18 +335,7 @@ ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat nav
 <p><img src="/static/images/dancing_banana.gif" style="width:200px"></p>
 <h3 id="the-verdict-oh-my-goodness-this-actually-is-kind-of-easy-">The verdict - Oh my goodness this actually is kind of easy!</h3>
 <p>Well, jeez. This was so much easier than the first time I tried to set up a React project. I am very pleased. I am beyond very pleased. I am actually in complete disbelief and wish I had realized it could be this easy this the first time. This makes learning React a much more tolerable proposition.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/04/maybe-i-was-wrong-about-react</link><guid isPermaLink="true">blog/2016/04/maybe-i-was-wrong-about-react</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 07 Apr 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Ember looks neat]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Ember looks neat - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Ember looks neat</h1><div class="timestamp">March 24, 2016</div><article><h3 id="i-got-99-problems-and-98-of-them-are-javascript-mv-frameworks">I got 99 problems and 98 of them are javascript MV* frameworks</h3>
+]]></description><link>blog/2016/04/maybe-i-was-wrong-about-react</link><guid isPermaLink="true">blog/2016/04/maybe-i-was-wrong-about-react</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 07 Apr 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Ember looks neat]]></title><description><![CDATA[<h3 id="i-got-99-problems-and-98-of-them-are-javascript-mv-frameworks">I got 99 problems and 98 of them are javascript MV* frameworks</h3>
 <p>I am in the market for a new MV* framework in Javascript. I&#39;ve done Angular 1, many times. There are things I like about it - dependency injection is easy, meaning unit testing is easy; there is <a href="https://github.com/johnpapa/angular-styleguide">good guidance</a> on style and best practices; documentation is pretty great. There are also things I don&#39;t like about it - it can be slow; the digest cycle can make me want to rip my hair out at times; writing directives can be confusing and sometimes feels a little like throwing darts at a dartboard to see what sticks. But that ship has sailed, and there are too many other frameworks to stick with Angular 1 for life. I am a breadth of knowledge guy, not depth of knowledge - and the longer I stick with one framework, the more I feel like I&#39;m falling behind.</p>
 <h4 id="angular-2">Angular 2</h4>
 <p>The logical framework for me is Angular 2, right? I have all that Angular 1 experience. They&#39;ve now provided good <a href="https://angular.io/docs/ts/latest/guide/upgrade.html">guidance on migration</a>,which is way better than when it was announced, and we all thought we&#39;d be rewriting apps from scratch. But to be honest, I haven&#39;t looked into Angular 2 a whole lot, because when I look at the examples, the views look atrocious.</p>
@@ -454,18 +360,7 @@ ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat nav
 <p>Which brings me to Ember. I don&#39;t know a whole lot about Ember. In fact, most of what I know, I learned from <a href="http://hanselminutes.com/516/ambitious-ux-and-ambitious-apps-with-ember-and-lauren-tan">one episode of HanselMinutes</a>.</p>
 <p>What I think I like the most about Ember is that it provides opinions for you. This is my biggest issue right now with JavaScript development - you need to have an opinion about everything. I am a breadth of knowledge guy, rather than depth of knowledge - as a result, I have more interest in learning the opinions prescribed by a framework than in forcing my own opinions onto a framework. I want my MV* framework to have opinions for me so that I can focus on building something.</p>
 <p>Heck, <a href="http://emberjs.com/">the slogan on their site</a> is &quot;more productive out of the box&quot;. That is a slogan I can get behind.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/03/emberLooksNeat</link><guid isPermaLink="true">blog/2016/03/emberLooksNeat</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 24 Mar 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Static Site Generators Are The New WordPress]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Static Site Generators Are The New WordPress - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Static Site Generators Are The New WordPress</h1><div class="timestamp">March 10, 2016</div><article><h3 id="static-site-generators-are-the-new-wordpress">Static Site Generators Are The New WordPress</h3>
+]]></description><link>blog/2016/03/emberLooksNeat</link><guid isPermaLink="true">blog/2016/03/emberLooksNeat</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 24 Mar 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Static Site Generators Are The New WordPress]]></title><description><![CDATA[<h3 id="static-site-generators-are-the-new-wordpress">Static Site Generators Are The New WordPress</h3>
 <p>I recently presented at the MKE Web Pros meetup group, about static site generators, and how you can build stupid simple websites with them.</p>
 <h4 id="slides">Slides</h4>
 <p>This is a less than ideal way to distribute slides - but the template for my slides uses a custom font, so it looks like garbage if I post them on slideshare. As a temporary solution, <a href="/static/pdf/staticgen.pdf">here they are as a pdf</a>.</p>
@@ -475,9 +370,4 @@ ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat nav
 <p>I would love to say static site generation is the answer for all sites. But it&#39;s not quite ready for your non-technical relative&#39;s site. Until content editing is more user-friendly, static site generation is probably only for your simplest sites or your most technical friends&#39; websites. As a general rule, if the content editor is not capable or ready to write content using a language like Markdown, static site generation might not be the answer.</p>
 <p>The good news is, we&#39;re headed toward a future where even your non-technical relative can publish content on a statically generated site. Services like Contentful and CloudCannon and plugins like Netlify-CMS are pushing in that direction. I don&#39;t think we&#39;re too far from a future where your non-technical relative can edit content in a WYSIWYG editor, click a button, and push changes to their statically generated site.</p>
 <p>Check out <a href="http://www.staticgen.com">staticgen.com</a> to get started with static site generation. There are way too many generators for me to recommend &quot;the perfect one&quot;. It is up to you to determine which generator works best for your scenario. For me, the answer is either HarpJs or Metalsmith. For you, the answer could be anything. Find the static generator for you, and let&#39;s start moving the web to a more performant and less vulnerable place.</p>
-</article><hr><div id="disqus_thread"><script>(function() {
-    var d = document, s = d.createElement('script');
-    s.src = '//pleepleus88githubio.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/03/staticgen</link><guid isPermaLink="true">blog/2016/03/staticgen</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 10 Mar 2016 06:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>blog/2016/03/staticgen</link><guid isPermaLink="true">blog/2016/03/staticgen</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 10 Mar 2016 06:00:00 GMT</pubDate></item></channel></rss>

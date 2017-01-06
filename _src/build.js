@@ -50,6 +50,10 @@ var pipeline = metalsmith(__dirname)
     ))
     .use(metallic())
     .use(markdown())
+    //this has to happen before jade, or else the rss will include everything in the layouts.
+    .use(feed({
+        collection: 'articles'
+    }))
     //jade must come after collections.
     .use(jade({
         useMetadata: true,
@@ -74,9 +78,6 @@ var pipeline = metalsmith(__dirname)
     }))
     .use(snippets({
         stop: ['<span class="more">']
-    }))
-    .use(feed({
-        collection: 'articles'
     }))
     ;
 
