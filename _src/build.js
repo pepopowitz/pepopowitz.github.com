@@ -25,7 +25,7 @@ var pipeline = metalsmith(__dirname)
     .source('./content')
     .metadata({
         site: {
-            title: 'The Blog of Steven J Hicks',
+            title: 'Steven J Hicks\'s Blog',
             url: 'https://pepopowitz.github.io',
             author: 'Steven J Hicks'
         }
