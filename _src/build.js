@@ -12,6 +12,7 @@ var snippets = require('metalsmith-snippet');
 var redirect = require('metalsmith-redirect');
 var markdown = require('metalsmith-markdown');
 var metallic = require('metalsmith-metallic');
+var feed = require('metalsmith-feed');
 
 var opener = require('opener');
 var execFile = require('child_process').execFile;
@@ -22,6 +23,13 @@ var runAsServer = process.argv.slice(2) == '--server';
 
 var pipeline = metalsmith(__dirname)
     .source('./content')
+    .metadata({
+        site: {
+            title: 'pepopowitz.github.io',
+            url: 'https://pepopowitz.github.io',
+            author: 'Steven J Hicks'
+        }
+    })
     .use(sass({
         sourceMap: true,
         sourceMapContents: true,   // This will embed all the Sass contents in your source maps.
@@ -64,6 +72,9 @@ var pipeline = metalsmith(__dirname)
     .use(permalinks())
     .use(snippets({
         stop: ['<span class="more">']
+    }))
+    .use(feed({
+        collection: 'articles'
     }))
     ;
 

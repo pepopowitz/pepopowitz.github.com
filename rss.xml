@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[pepopowitz.github.io]]></title><description><![CDATA[pepopowitz.github.io]]></description><link>https://pepopowitz.github.io</link><generator>metalsmith-feed</generator><lastBuildDate>Fri, 06 Jan 2017 03:03:35 GMT</lastBuildDate><atom:link href="https://pepopowitz.github.io/rss.xml" rel="self" type="application/rss+xml"/><author><![CDATA[Steven J Hicks]]></author><item><title><![CDATA[Mocking ES2015 modules]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Mocking ES2015 modules - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Mocking ES2015 modules</h1><div class="timestamp">January 4, 2017</div><article><p>If you&#39;re unit testing code that is using ES2015 modules [<a href="#footnotes">1</a>], you&#39;ll probably point want to mock dependencies at some point. For the most part this is just like mocking things in any code. My tool of choice right now is <a href="https://github.com/jupiter/simple-mock">simple-mock</a>, but there are gajillions of options.</p>
+<h3 id="test-induced-damage">Test-induced damage</h3>
+<p>There is some test-induced damage that my team has come to accept with simple-mock, and I am guessing it would be an issue with other mocking libraries like it. While simple-mock is great for mocking functions that are properties on exported objects, it seemed difficult to mock standalone/named exported functions from dependencies.</p>
+<p>So we found this to be easy: [<a href="#footnotes">2</a>]</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">//dependency.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+    <span class="hljs-attr">someAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-comment">//....</span>
+    }
+}
+
+<span class="hljs-comment">//test.js</span>
+<span class="hljs-keyword">import</span> simple <span class="hljs-keyword">from</span> <span class="hljs-string">'simple-mock'</span>;
+
+<span class="hljs-keyword">import</span> dependency <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency'</span>;
+
+describe(<span class="hljs-string">'feature'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    afterEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        simple.restore();
+    });
+
+    it(<span class="hljs-string">'calls a dependency'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-comment">//Arrange</span>
+        simple.mock(dependency, <span class="hljs-string">'someAction'</span>);
+
+        <span class="hljs-comment">//Act</span>
+        systemUnderTest.execute();
+
+        <span class="hljs-comment">//Assert</span>
+        expect(dependency.someAction.callCount).to.equal(<span class="hljs-number">1</span>);
+    });
+});</code></pre>
+
+<p>But the <code>simple.mock</code> function is looking for an object, and a property on that object. So we found this to be difficult:</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">//dependency.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someAction</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-comment">//....</span>
+}
+
+<span class="hljs-comment">//test.js</span>
+<span class="hljs-keyword">import</span> simple <span class="hljs-keyword">from</span> <span class="hljs-string">'simple-mock'</span>;
+
+<span class="hljs-comment">// Notice the difference in how we are importing...</span>
+<span class="hljs-keyword">import</span> {someAction} <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency'</span>;
+
+describe(<span class="hljs-string">'feature'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    afterEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        simple.restore();
+    });
+
+    it(<span class="hljs-string">'calls a dependency'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-comment">//Arrange</span>
+        <span class="hljs-comment">// ¯\_(ツ)_/¯</span>
+        <span class="hljs-comment">// How would we mock 'someAction'? It isn't a property on an object.</span>
+
+        <span class="hljs-comment">//Act</span>
+        systemUnderTest.execute();
+
+        <span class="hljs-comment">//Assert</span>
+        expect(someAction.callCount).to.equal(<span class="hljs-number">1</span>);
+    });
+});</code></pre>
+
+<p>As a result of our inability to solve this problem, we had accepted that we would always export a default object from our code, with functions on it as properties.</p>
+<p>So while we wanted to export something like this:</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">//dependency.js - the desired way</span>
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someAction</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-comment">//....</span>
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">otherAction</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-comment">//...</span>
+}</code></pre>
+
+<p>We just always accepted that we would do this:</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">//dependency.js - the undesired way</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+    <span class="hljs-attr">someAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-comment">//....</span>
+    },
+    <span class="hljs-attr">otherAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-comment">//...</span>
+    }
+}</code></pre>
+
+<h3 id="why-does-it-matter-">Why does it matter?</h3>
+<p>There&#39;s a reason this was not ideal. Modern bundlers are able to remove the unused exports out of your code, to reduce your bundle size. But code is only removed if it isn&#39;t imported. By exporting a single object with a bunch of functions on it, the entire object must be imported by the calling code.</p>
+<p>So in the first example, if your code called <code>someAction</code> but not <code>otherAction</code>, your final bundle would only include <code>someAction</code>. But in the second example, even if you are only ever calling <code>someAction</code>...you are importing the entire object, and therefore the unused <code>otherAction</code>.</p>
+<p>In our app, that ends up not being a problem, because we are using all of the code we write. But if we were writing a library, or some code that was intended to be shared by other apps and therefore might not use everything, this would not be cool.</p>
+<h3 id="but-there-is-a-better-way-to-import-the-dependency-">But there is a better way to import the dependency.</h3>
+<p>Today, we discovered the answer to our problems. The &quot;import * as&quot; syntax allows you to import all exports from a dependency, expanding them onto an object - and therefore allowing you to mock a named/standalone function from your dependency. [<a href="#footnotes">3</a>]</p>
+<p>So all that changes is how we import dependencies into our tests:</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">//dependency.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someAction</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-comment">//....</span>
+}
+
+<span class="hljs-comment">//test.js</span>
+<span class="hljs-keyword">import</span> simple <span class="hljs-keyword">from</span> <span class="hljs-string">'simple-mock'</span>;
+
+<span class="hljs-comment">//     vvvvvvvvvvvvvvv Notice the difference in how we are importing</span>
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> dependency <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency'</span>;
+<span class="hljs-comment">//     ^^^^^^^^^^^^^^^</span>
+
+describe(<span class="hljs-string">'feature'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    afterEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        simple.restore();
+    });
+
+    it(<span class="hljs-string">'calls a dependency'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-comment">//Arrange</span>
+        <span class="hljs-comment">// and now we can pass simple.mock a property on an object.</span>
+        simple.mock(dependency, <span class="hljs-string">'someAction'</span>);
+
+        <span class="hljs-comment">//Act</span>
+        systemUnderTest.execute();
+
+        <span class="hljs-comment">//Assert</span>
+        expect(dependency.someAction.callCount).to.equal(<span class="hljs-number">1</span>);
+    });
+});</code></pre>
+
+<p>Hooray, JavaScript! Hooray, mocking! Boo, test-induced damage!</p>
+<hr>
+<div id="footnotes"></div>
+
+<p>[1] If you aren&#39;t unit testing your JS, you should be! It is not as scary as it sounds. You&#39;ll see great improvements to the quality of your front-end code. As an added bonus, the guilt that you probably feel for not testing your JS will disappear.</p>
+<p>[2] <a href="http://mochajs.org/#arrow-functions">Why aren&#39;t you using ES2015 arrow functions in your tests?</a></p>
+<p>[3] I ain&#39;t gonna lie, the discovery of this functionality was, as usual, the result of a <a href="http://stackoverflow.com/a/38414160/1585069">stackoverflow search</a> that I definitely tried a long time ago, but must have narrowly missed.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2017/01/mocking-es2015-modules</link><guid isPermaLink="true">blog/2017/01/mocking-es2015-modules</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Wed, 04 Jan 2017 06:00:00 GMT</pubDate></item><item><title><![CDATA[My 2016 recap]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>My 2016 recap - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>My 2016 recap</h1><div class="timestamp">January 3, 2017</div><article><p>2016 was a ...year that happened. Love it or hate it, it happened. At a personal level, I had a pretty fantastic 2016.</p>
+<h3 id="i-discovered-what-i-want-to-do-when-i-grow-up">I discovered what I want to do when I grow up</h3>
+<p>Nevermind that I am a few weeks from being able to say <a href="https://www.youtube.com/watch?v=jXEde89WC44">I&#39;m a man, I&#39;m 40!</a> It was 2016 when I realized what it is I want to do with my career - I want to speak.</p>
+<p>When I was an intern at State Farm in the summer of 1998, I was forced to attend Toastmasters on a regular basis. I hated it. It seemed like a bunch of old people who liked to hear themselves talk.</p>
+<p>But I was not bad at it. One of our assigments was to give a speech about..well I&#39;m not sure what, actually....and in silent protest I gave my speech about all the ways I procrastinated writing it. It went over really well, and I was voted my group&#39;s finalist, which meant there was a chance I would have to give it in front of the entire group of interns. My instructor told me I was &quot;quite a wordsmith&quot; (+1 for vocabulary), but I could use some practice.</p>
+<p>I ended up not being picked to speak in the finals, which I was pretty excited about. I left that summer with a bad taste in my mouth for Toastmasters - though to be fair, I was young and hated everything.</p>
+<p>But I also left with the knowledge that I didn&#39;t hate the actual act of speaking. Throughout my career I&#39;ve been happy to speak to coworkers in internal lunch-and-learns. But until recently, I had never gone much further than that.</p>
+<p>In late 2015, having done a lunch-and-learn on TDD, my boss asked if I was interested in getting out and speaking outside of the company. My TDD lunch-and-learn was not great - lots of bullet points, and too much information crammed into tiny spaces. But I enjoyed it, so I said yes.</p>
+<p>So in 2016, my goal was really to get out and speak. And when I did - I realized I love it. I love the amount of learning I do when I research a topic to death, because I don&#39;t want to look foolish. I love telling jokes that not everyone gets. I love telling stories that reframe technical ideas in terms of real life. And despite the 10 minutes of &quot;oh crap this is really happening&quot; I feel as the talk is about to start, I love the rush I feel 15 minutes into the talk when the audience is engaged, and laughing at my dumb jokes, and listening to my dumb stories about grocery shopping.</p>
+<h3 id="so-i-did-some-speaking-in-2016">So I did some speaking in 2016</h3>
+<p>I spoke at Milwaukee meetups twice in 2016. Once on static site generation, and once on clean code, as a lightning talk. These were my first two times speaking outside of my job. The thing I noticed the most was that people were actually engaged and listening. I thought speaking in front of co-workers would have been easier, because they were people I know...but since so many people are just there to pass some time while they eat their lunch, the engagement level isn&#39;t very high. When you are speaking outside of work, you are speaking to people who actively sought out your talk - so the engagement level is way higher.</p>
+<p>I also got lucky enough to get into four conferences/camps in 2016!</p>
+<p>My first conference speaking opportunity ever - <a href="/blog/2016/06/chicago-coder-conference">at Chicago Coder Conference</a> - was at a conference that I didn&#39;t know anyone on the selection committee. That felt pretty good. I did a variation of my static site generation talk. I met some great people, and had a really fun time in downtown Chicago for a couple days.</p>
+<p>Later in the year, I spoke at <a href="/blog/2016/11/october-recap">MKE DOT NET and Milwaukee Code Camp</a>. Each time I&#39;ve spoken, it has gotten easier. At MKE DOT NET, I got a ton of great reviews in our follow-up survey.</p>
+<p>I also got to speak at another Centare-run event in December - QA Camp. This was an event for QA professionals, and I tag-teamed a talk with my co-worker <a href="http://thefoxgang.com/">Tyler Evert</a>, called &quot;Tight Feedback Loops with TDD and DevOps.&quot; This was my first tag-team talk, and it was really fun. Again, we got a ton of great reviews in the follow-up survey. I feel like I am on the right track.</p>
+<p>I really wanted to get into That Conference in 2016, but it didn&#39;t happen. Looking back at the abstract I submitted, I am not surprised. It was wordy. I was crafting it as if the reader had nothing to do on a cold winter Saturday, poured themself a cup of coffee, kicked their feet up in front of the fireplace, and read my abstract.</p>
+<h3 id="i-got-some-great-speaking-advice-at-that-conference">I got some great speaking advice at That Conference</h3>
+<p>Probably the best part of That Conference is the Open Spaces, in which anyone can propose any topic, and anyone can attend. I facilitated one on &quot;becoming a tech speaker&quot;, and it was amazing. I had tons of great speakers stop by to give advice and answer questions. It was in this session that I realized why I probably had my abstract rejected. I am still trying to figure out how to get my abstracts selected, I feel like it is a game that I just haven&#39;t figured out yet.</p>
+<p>Some of the other great things I learned about speaking:</p>
+<ul>
+<li>It&#39;s okay to reach out to organizers for feedback on why your abstracts weren&#39;t selected. I have used this advice several times already, and no one so far has declined my request for more info.</li>
+<li>Have backups for everything! This was a theme for me this year. At Milwaukee Code Camp, I thought I had accounted for everything...until the projector stopped working. At MKE DOT NET, Scott Hanselman worked with us to make sure we had backups of everything, including a projector...but we somehow missed a backup microphone, so obviously that&#39;s the one thing that started to die five minutes in. At QA Camp, the batteries in Tyler&#39;s clicker died halfway through. So yeah....backups for everything.</li>
+<li>Have a checklist of all the things you want to verify during the setup of your talk. <a href="https://www.evernote.com/shard/s8/sh/bceb64d8-717f-4027-aaaa-6cd73d071ffc/be44ae852ddc8208">Cory House</a> has a very thorough example. This is incredibly helpful in those ten minutes before you start up, when your brain is freaking out a little bit.</li>
+<li>Find what works for you. You will get advice from everyone about how to get started speaking, or get better at speaking. It turns out...you and that person may not agree on what makes a good speaker. Or you may learn differently than they do. Much like the adage about the most effective gym workout being the one that you will not quit - the best speaking tips are the ones that work for you. Which reminds me....</li>
+</ul>
+<h3 id="i-stopped-hating-markdown">I stopped hating Markdown</h3>
+<p>As early as a few months ago, I despised Markdown. It was too cryptic for me. But I realized that a weird combination of PowerPoint and OneNote weren&#39;t really working for me, for developing talks. I discovered that there were plenty of web-based alternatives, which would allow me to write my notes as an outline from the start, and iteratively build them up. The feedback I got from other speaking coworkers was that they sucked.</p>
+<p>But I settled on <a href="https://remarkjs.com">RemarkJS</a> and tried it anyway, and it completely works for me. I have written several talks with it, and will continue to write my talks that way.</p>
+<p>Like always, different strokes for different folks.</p>
+<p>As a result, I&#39;ve now written talk outlines in Markdown enough times that I don&#39;t need a cheatsheet to do everything. Me from three months ago would not have believed this would happen.</p>
+<h3 id="looking-forward-to-2017">Looking Forward to 2017</h3>
+<p>I am really happy with my career right now. I am submitting to conference CFP&#39;s any time I can. I am not being accepted a bunch -- yet. I love that <a href="http://www.centare.com">Centare</a> is giving me a ton of opportunity to speak.</p>
+<p>In 2017 I plan to speak a bit more at local meetups. I have a talk scheduled in late January with the local ReactJS meetup group, and I think spreading my brand locally is a great way for me to get regional conferences to notice me.</p>
+<p>And speaking of brand, I know this is something I need to work on in 2017. I am a bad self-marketer, and I need to get better.</p>
+<p>I am also hoping to get into several regional conferences this year. I&#39;m submitting like crazy. It&#39;s not happening as quickly as I want it to, but I know this is what I want to do, so I&#39;m going to keep submitting.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2017/01/my-2016-recap</link><guid isPermaLink="true">blog/2017/01/my-2016-recap</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Tue, 03 Jan 2017 06:00:00 GMT</pubDate></item><item><title><![CDATA[SSIS Is Annoying]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>SSIS Is Annoying - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>SSIS Is Annoying</h1><div class="timestamp">December 1, 2016</div><article><p>The project I&#39;m currently working on requires a spreadsheet to be imported into the database. SSIS seemed like the logical solution to this.</p>
+<p>But one month after dealing with SSIS, I am done with it. SSIS is like 85% awesome - but 15% &quot;OMG I hate you&quot;. <a href="https://www.youtube.com/watch?v=QfzDUpB88x4&amp;t=0m24s">I wrote a song about it, like to hear it here it goes</a>.</p>
+<h3 id="ssis-doesn-t-work-consistently-across-machines">SSIS doesn&#39;t work consistently across machines</h3>
+<p>The gist of the package we are building is that it takes an Excel spreadsheet, sanitizes the data, and upserts it into a database.</p>
+<p>Some of the data was a little bit long. We built some columns to handle 512 characters in the database. Everything seemed like it was working fine.</p>
+<p>But then one of the team members said it was failing for him, complaining about having to truncate data. We were all using the same spreadsheet, so this didn&#39;t make sense.</p>
+<p>After some investigation, it turns out all of the columns coming from the spreadsheet were capped at 255 characters. That is strange in itself, but we&#39;ll get to that. But why was it not failing for me?</p>
+<p>I still don&#39;t know the answer. Because everything in the package said that any value over 255 characters long should have been failing with an error. And that&#39;s what it was doing for my coworker - but not for me!</p>
+<p>My bigger concern was this 255 character limit.</p>
+<h3 id="ssis-and-excel-are-just-the-worst">SSIS and Excel are just the worst</h3>
+<p>SSIS thinks it is soooo smart. It can predict the widths of your columns for you, so you don&#39;t have to define them! Hooray!</p>
+<p>Except it only predicts the widths based on the first 8 rows of data. And if there is nothing very long in a column, it will set its max length to 255.</p>
+<p>This wouldn&#39;t be the worst thing, if you could change the columns it got wrong. But you can&#39;t! You can try...but it will just blow away your changes when it re-samples the spreadsheet.</p>
+<h4 id="but-you-can-change-the-default-sample-size-from-8-rows-to-something-else-">But you can change the default sample size from 8 rows to something else!</h4>
+<p>Um...<a href="http://stackoverflow.com/a/8629065/1585069">in your registry</a>. That&#39;s a super fun way to make things fail differently for you than the rest of your team! And not a solution I plan on ever using.</p>
+<h4 id="hey-didn-t-you-read-the-rest-of-that-answer-you-can-put-a-dummy-row-with-long-values-in-it-to-trick-ssis-">Hey, didn&#39;t you read the rest of that answer? You can put a dummy row with long values in it, to trick SSIS!</h4>
+<p>Yup, you can. Then you have to alter your package to ignore it...and hope that no one accidentally deletes that row one day. This is the least bad option...but still bad.</p>
+<p>One side-effect of adding the dummy row is that now every column that is more than 255 characters long goes from a <code>DT_WSTR(255)</code> type to a <code>DT_NTEXT</code> type. That makes sense.</p>
+<h3 id="but-ssis-is-bad-at-determining-the-length-of-text">But SSIS is bad at determining the length of text</h3>
+<p>For all of those columns that were fine as a <code>DT_WSTR(255)</code> type, the <code>LEN(x)</code> function is gravy.</p>
+<p>But for all of those columns that became <code>DT_NTEXT</code>, SSIS will suddenly start doubling the column lengths. After the crazy pills wear off, you might find <a href="https://technet.microsoft.com/en-us/library/ms141797(v=sql.130">this</a>.aspx) -</p>
+<blockquote>
+<p>If the argument passed to the LEN function has a Binary Large Object Block (BLOB) data type, such as DT_TEXT, DT_NTEXT, or DT_IMAGE, the function returns a byte count.</p>
+</blockquote>
+<p>Ugh. I could see the argument for that with <code>DT_IMAGE</code>. But <code>DT_TEXT</code> and <code>DT_NTEXT</code>? They have &quot;text&quot; in the name! Why wouldn&#39;t I want the length of the text?</p>
+<p>Turns out you have to do the conversion yourself. <code>LEN( (DT_WSTR, 600) X)</code> Thanks, SSIS!</p>
+<h3 id="ssis-sucks-for-other-reasons-too">SSIS sucks for other reasons, too</h3>
+<p>Deployment is bad. Our timebox ended before we could figure out if we could run this all off of a server.</p>
+<p>It crashes often - at least with Visual Studio 2015. Especially when you pull latest on the repo and it has to reload the project.</p>
+<p>When it crashes, it leaves a process running (SSIS Debug Host) that you have to kill before you can run it again.</p>
+<p>You can only have one Data Flow task open at one time. This is incredibly frustrating when you want to &quot;copy&quot; functionality across tasks.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>SSIS, consider me unimpressed.</p>
+<p>My advice for someone who needs to import data from a spreadsheet:</p>
+<ul>
+<li>Build a command-line project.</li>
+<li>Have that command-line project use SqlBulkCopy to move all excel rows into a working table in your database.</li>
+<li>Have that command-line project then execute a bunch of T-SQL that does all your ETL things.</li>
+<li>Hug yourself for avoiding SSIS.</li>
+</ul>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/12/ssis-is-annoying</link><guid isPermaLink="true">blog/2016/12/ssis-is-annoying</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 01 Dec 2016 06:00:00 GMT</pubDate></item><item><title><![CDATA[October Recap]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>October Recap - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>October Recap</h1><div class="timestamp">November 12, 2016</div><article><p>October was a crazy month! Aside from being peak soccer season for my kids, I spoke at Milwaukee Code Camp on the 15th, and MKE DOT NET at the end of the month.</p>
+<p>First off, thanks to everyone who attended my sessions! I had a great time. I really enjoy the storytelling part of speaking. It is quickly becoming clear to me that stories are how you draw people in.</p>
+<h3 id="milwaukee-code-camp">Milwaukee Code Camp</h3>
+<p>At Milwaukee Code Camp, I presented my static site/JAM stack talk, in the &quot;Backends? Where we&#39;re going we don&#39;t need...backends...&quot; iteration. This talk has undergone constant revision since I first gave it, as I&#39;ve been learning how to do technical speaking. It will change before the next time, too. I had some great feedback from people, and I also noticed some things on my own that I am looking forward to improving.</p>
+<p>I battled some issues with the projector right as my talk was about to start. While I was waiting for help to arrive, I decided that I could get started without slides - and realized before help arrived that I could probably do this talk entirely without a projector. This was an encouraging feeling.</p>
+<h3 id="mke-dot-net">MKE DOT NET</h3>
+<p>After Milwaukee Code Camp, the crazy ramped even higher. Aside from speaking at MKE DOT NET, I was also fairly involved in helping organize the conference. The end of October was a crazy busy time. Thankfully, I work with a ton of really great people who volunteered to make the event run silky smooth, given some scheduling challenges from the venue.</p>
+<p>My talk at MKE DOT NET almost couldn&#39;t have gone better. I had a great crowd, including some old friends. Everyone seemed really engaged - at one point I wanted to take a picture of literally the entire crowd looking up at a code sample, but the moment had passed by the time I got my phone out.</p>
+<p>Slides for this talk can be found <a href="https://steven-j-hicks-speaking.netlify.com/code-is-communication/">here</a>.</p>
+<p>One experiment from this talk that went really well was the use of a JavaScript-based presentation framework, instead of PowerPoint. I find that I spend a lot of time moving things around in PowerPoint, and I really wanted something where I could use CSS to keep my slides consistent. I also wanted to be able to keep my slides in a git repo. I did a little research and found that <a href="https://remarkjs.com">remark</a> most closely met the vision in my head.</p>
+<p>It worked great! My plan moving forward is to use remark to build all my decks. I am not the biggest fan of markdown but I love being able to outline my talk in code, and build it out from there.</p>
+<p>There are a lot of great conversations I got out of these two events, but right up near the top was an opportunity to work with Scott Hanselman to prepare the A/V equipment for his keynote. I got some great tips from him on speaking, as well as making MKE DOT NET more diverse next year.</p>
+<p><img src="/static/images/mkedotnet.jpg" alt="Steven Hicks and Scott Hanselman"></p>
+<h3 id="up-next">Up Next</h3>
+<p>My next scheduled talk will be at QA Camp in Milwaukee, on December 8th. I&#39;ll be speaking with a colleague on tightening the feedback loop with TDD and DevOps.</p>
+<p>I&#39;ve also got a couple proposals that I&#39;m awaiting responses from, and I&#39;m looking forward to submitting to as many CFPs as I can in the near future.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/11/october-recap</link><guid isPermaLink="true">blog/2016/11/october-recap</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Sat, 12 Nov 2016 06:00:00 GMT</pubDate></item><item><title><![CDATA[Getting Started With TDD]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Getting Started With TDD - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Getting Started With TDD</h1><div class="timestamp">August 19, 2016</div><article><h3 id="background">Background</h3>
+<p>Recently, a coworker asked me to send him some good resources for introducing a team to TDD. Rather than hoarding the info, this seemed like something I should probably put somewhere for the next person that asks. Much of this is information that I talked about in my &quot;You down with TDD? Yeah you know me&quot; talk that I wish I could give more often.</p>
+<p>There is entirely too much information to fit into one place, so I&#39;ve broken the info down a bit.</p>
+<ul>
+<li><a href="/blog/2016/08/my-tdd-sales-pitch">My TDD sales pitch</a></li>
+<li><a href="/blog/2016/08/getting-started-with-tdd">Getting started with TDD (this post!)</a></li>
+</ul>
+<h3 id="getting-started">Getting Started</h3>
+<p>Right, so there are a couple different ways to handle this.</p>
+<h4 id="cold-turkey">Cold Turkey</h4>
+<p>There are many who will say that cold turkey is the way to go to learn TDD. TDD all the things, on all the projects, all the time! The only way to truly learn it is to be thrown into the fire, with no way to escape but a fireman&#39;s axe labelled &quot;TDD&quot;.</p>
+<p>Maybe this works for you. If it does...I apologize, I don&#39;t have any advice, because this would never work for me.</p>
+<h4 id="baby-steps">Baby Steps</h4>
+<p>Things generally work better for me if I dip my toes in the water first. TDD for me took a couple years of biting off a little more each time. It went something like this:</p>
+<ol>
+<li><strong>Consume resources</strong>. Watch videos. Read blogs. Learn what TDD is all about.</li>
+<li><strong>Practice.</strong> Start messing around with some meaningless code, just to see what TDD feels like. <a href="http://codekata.com/">Code katas</a> are a great medium for this.</li>
+<li><p><strong>Introduce TDD into one project, in one feature.</strong> Sometimes there is a task on a project that just feels perfectly made for TDD. Something where you need to do some calculations, for example. The test scenarios practically write themselves. It is here that you can start to introduce TDD into your development flow.</p>
+<p> Sometimes the features will end up being more difficult to TDD than you expected - that&#39;s okay. If you need to stop, you can stop. You also might find yourself feeling like you are taking to long to get things done, the TDD learning curve is just fighting you. Again - I stopped here many times myself, and abandoned TDD until I felt like I was back on schedule. <strong>It&#39;s okay to introduce the practice a little bit at a time.</strong></p>
+</li>
+<li><strong>Introduce TDD into one project, in many features.</strong> Alright, so now you&#39;re starting to build momentum and confidence. Start TDD&#39;ing more!</li>
+<li><strong>TDD all the things!</strong> Okay, not really. There are things that are just not worth testing or TDD&#39;ing, in my opinion. The cost is just too high for the value you get. But now you can go into a project saying &quot;yeah, we&#39;re going to TDD the snot out of this thing.&quot;</li>
+</ol>
+<h3 id="resources">Resources</h3>
+<h4 id="the-man-himself">The man himself</h4>
+<p>If there&#39;s anyone who knows anything about TDD, it&#39;s <a href="https://twitter.com/KentBeck">Kent Beck</a>. These resources would be a good place to start if you would like to learn from &quot;the source&quot; of TDD.</p>
+<ul>
+<li><a href="https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530/ref=sr_1_1"><strong>He wrote a book.</strong></a>  I would be lying if I said I read it but I would like to.</li>
+<li><a href="https://pragprog.com/screencasts/v-kbtdd/test-driven-development"><strong>He made some videos.</strong></a> I would be lying if I said I&#39;ve watched them but I would like to.</li>
+</ul>
+<h4 id="mark-seemann">Mark Seemann</h4>
+<p>I&#39;ll talk about this more in another post, but the most significant way to improve your ability to TDD is to improve your ability to write tests. <a href="http://blog.ploeh.dk/about/">Mark Seemann</a> is full of good tips on writing autonomous tests that follow principles of clean software design.</p>
+<ul>
+<li><a href="https://app.pluralsight.com/library/courses/advanced-unit-testing/table-of-contents"><strong>He has a really good Pluralsight video on Advanced Unit Testing</strong></a>. I have watched this and it has significantly improved my test code.</li>
+<li><a href="https://app.pluralsight.com/library/courses/outside-in-tdd/table-of-contents"><strong>He has another Pluralsight video called Outside-In TDD.</strong></a> I have not watched this but I want to. There are a couple strategies to TDD - outside-in, and then I guess obviously inside-out. Inside-out seems to be more natural for people new to TDD. You build the inner-most components (i.e. data-access) first, then work your way out. Outside-in is, in my opinion, the correct way to TDD. Build the outer-most component (i.e. the UI) first, then work your way in. The big advantage to outside-in is that it allows you to shape the interfaces between components as the caller would want to use them.</li>
+</ul>
+<h4 id="chess-tdd-series">Chess TDD series</h4>
+<p>I would be lying if I said I watched all 60-some episodes, but Erik Dietrich put together a really nice <a href="href=&#39;http://www.daedtech.com/tag/chesstdd/&#39;">series of screencasts</a>, which captured him using TDD to build a chess game. It is neat to see it in action.</p>
+<h4 id="a-good-testing-checklist">A good testing checklist</h4>
+<p><a href="https://dzone.com/articles/unit-testing-checklist">This is a checklist</a> that helps you write good tests. Your tests are as important as your system code, so you should put effort into writing good, clean test code.</p>
+<h3 id="tdd-is-an-investment">TDD is an investment</h3>
+<p>Hopefully the above resources can help you get started with TDD. Like any other skill, TDD takes practice and patience. It took me years to get from TDD newb to feeling totally comfortable with it, so don&#39;t feel discouraged if it feels difficult at first.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/08/getting-started-with-tdd</link><guid isPermaLink="true">blog/2016/08/getting-started-with-tdd</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Fri, 19 Aug 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[My TDD Sales Pitch]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>My TDD Sales Pitch - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>My TDD Sales Pitch</h1><div class="timestamp">August 18, 2016</div><article><h3 id="background">Background</h3>
+<p>Recently, a coworker asked me to send him some good resources for introducing a team to TDD. Rather than hoarding the info, this seemed like something I should probably put somewhere for the next person that asks. Much of this is information that I talked about in my &quot;You down with TDD? Yeah you know me&quot; talk that I wish I could give more often.</p>
+<p>There is entirely too much information to fit into one place, so I&#39;ve broken the info down a bit.</p>
+<ul>
+<li><a href="/blog/2016/08/my-tdd-sales-pitch">My TDD sales pitch (this post!)</a></li>
+<li><a href="/blog/2016/08/getting-started-with-tdd">Getting started with TDD</a></li>
+</ul>
+<h3 id="intro-to-tdd">Intro to TDD</h3>
+<p>First off, <a href="https://en.wikipedia.org/wiki/Test-driven_development">the wikipedia article</a> has a good summary of what TDD is. A summary -</p>
+<ul>
+<li><strong>Every system change that you make requires a failing test first.</strong></li>
+<li>This is often boiled down to the slogan <strong>&quot;Red/Green/Refactor&quot;</strong>. Red = write a failing test, Green = make the test pass by writing &quot;just enough&quot; code, and Refactor &quot;just enough&quot; that you are happy with the result.</li>
+<li><strong>TDD encourages simplicity.</strong> &quot;Just enough&quot; is in that last bullet point twice. TDD wants to prevent you from over-designing.</li>
+<li><strong>TDD is a discipline.</strong> It is not easy to learn, and it is easy to fall out of habit. It takes practice. I worked on incorporating TDD into my dev flow for probably 2 years before it finally stuck.</li>
+</ul>
+<h3 id="why-use-tdd-">Why use TDD?</h3>
+<p>Some of the reasons I like TDD are found in the code.</p>
+<ul>
+<li><strong>TDD can lead to simpler designs.</strong> Emphasis on &gt;&gt;&gt;<strong>CAN</strong>&lt;&lt;&lt;. Not will. It is kind of a chicken vs egg situation - if you do TDD, your designs can be simpler...if you simplify your designs, it makes TDD easier. You can still do TDD with complex designs but that is often the type of scenario that causes a person to stop doing TDD.</li>
+<li><strong>TDD can lead to smaller units of code/looser coupling/cleaner interfaces.</strong> Similar to the previous point, this is not a guaranteed result.</li>
+<li><strong>TDD can improve your code coverage.</strong> You are writing tests before each line of system code - so you are usually getting pretty close to 100% coverage on anything you are using TDD for. I will not get into the discussion of whether 100% coverage is valuable....but if a high coverage number is important to you, TDD can help.</li>
+</ul>
+<p>My favorite reasons that I like TDD are found beyond the code.</p>
+<ul>
+<li><strong>TDD questions your understandings of the requirements.</strong> The moment in TDD when you are deciding what tests to write for your component is a great moment to reflect on what you do and don&#39;t know about the system. It is also a great moment for you and your team to talk, to figure out how to handle the things you don&#39;t know about the system.</li>
+<li><strong>TDD documents the requirements.</strong> TDD gives you thorough tests, which tell the next person looking at the code what you expected the system to do. They are also great for when a Quality Engineer asks you what should happen in a specific scenario, and you can&#39;t exactly remember.</li>
+<li><strong>TDD is a good guide for code reviews.</strong> Without TDD, code reviews that I&#39;ve done are generally aimless and we end up meandering through the code. When I am using TDD to write something, I start with the tests to guide me through the code review. We can talk about all the things that were and weren&#39;t covered by my changes easily, by following the tests.</li>
+<li><strong>TDD gives you confidence</strong> that your code works as you expected it to. If I make a change, I know I will have a broken test telling me if an unintended side-effect occurred.</li>
+<li><strong>TDD reduces mental clutter.</strong> This is my favorite. When my wife sends me to the store for a couple things, there is like a 90% chance that I will screw it up. If I&#39;m supposed to get milk, eggs, and butter, I will come home with milk, eggs, bacon, and beer....but no butter. My brain can&#39;t be trusted to remember a list of three groceries. It <strong>definitely</strong> can&#39;t be trusted to remember hundreds of different test scenarios for the code I&#39;m working on. TDD gets me the confidence to know when I broke something that I didn&#39;t think I would break, rather than having to fumble manually through some scenarios that I half remember.</li>
+</ul>
+<h3 id="why-not-use-tdd-">Why not use TDD?</h3>
+<p>There are lots of arguments people, including myself, have made to not use TDD.</p>
+<ul>
+<li><strong>It is hard.</strong> Yeah...at first. Like any skill, it takes practice, and eventually it becomes easier. The benefits outweigh the learning curve.</li>
+<li><strong>It is slow.</strong> Yeah...at first. Again, you eventually get faster. Plus, bugs are generally easier to figure out because you&#39;re writing simpler code, so you spend way less time in a debugger.</li>
+<li>I have tried and <strong>my tests were just breaking any time I wanted to change anything</strong>. Again, you get better at this over time, too. When I started out, my tests were big. They had a lot of setup, and a lot of assertions...because I wasn&#39;t writing very small units. Over time, you learn to write smaller units of code, which require less test setup. When small tests for small units of code break, they are easier to fix, so it&#39;s not that big of a deal that you broke a test.</li>
+<li><strong>I don&apos;t need all that test coverage.</strong> Maybe. I agree that 100% coverage is unreasonable. There definitely seems to be diminishing returns after about 80%. But sometimes I think we convince ourselves that we don&#39;t need coverage on something because we just aren&#39;t sure how to test it. As you get better at writing simpler units of code, it&#39;s hard to convince yourself not to cover stuff, because it&#39;s a lot easier than it used to be.</li>
+<li><strong>I test after.</strong> First off, good for you. I know I have a tendency to pass on testing if I am doing it after, and I suspect you may be similar. Also - when you&#39;re testing after, it is often at a point in the current sprint/iteration/whatever that you don&#39;t really want to be making changes to the underlying code, because you don&#39;t want to break anything that&#39;s already been tested. So you write your tests around what is easy to test. Or #yolo, you refactor the code to be more testable, and don&#39;t tell anyone you made the changes, because there&#39;s no time to test them. (Guilty.) In either case....wouldn&#39;t it be cool if you could refactor while covered by tests, instead of refactoring to write tests?</li>
+<li><strong>All that stuff <a href="http://david.heinemeierhansson.com/2014/tdd-is-dead-long-live-testing.html">that DHH said</a></strong>. The phrase I have best heard to describe DHH&#39;s post is &quot;test-induced damage&quot;. Abstractions just for the sake of testing, for example. To me, I see it more as &quot;test-induced compromise&quot; than damage. I can write unit tests for all my things just by making a few small design changes? Sign me up.</li>
+<li><strong>TDD is not a silver bullet.</strong> Yeah, it&#39;s not. Nothing is. But that doesn&#39;t mean it doesn&#39;t have value.</li>
+</ul>
+<p>That&#39;s my sales pitch. Next up I&#39;ll list <a href="/blog/2016/08/getting-started-with-tdd">a few good resources for getting started with TDD</a>.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/08/my-tdd-sales-pitch</link><guid isPermaLink="true">blog/2016/08/my-tdd-sales-pitch</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 18 Aug 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Back-ends? Where we're going, we don't need...back-ends.....]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Back-ends? Where we're going, we don't need...back-ends..... - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Back-ends? Where we're going, we don't need...back-ends.....</h1><div class="timestamp">June 10, 2016</div><article><p>I got to present at this year&#39;s Chicago Coder Conference, about static site generators and the &quot;JAM stack.&quot; This is a talk I&#39;ve been doing variations of here and there for about six months. It was the first time I&#39;ve been lucky enough to present at a conference.</p>
+<p>I had a great time! I was a bit disheartened by the fact that I&#39;d been time-slotted up against Uncle Bob, and I even told everyone I met the first day of the conference that they should go listen to him instead of me. It was an honor to be speaking at the same venue as him, he is an amazing speaker and a role model for me. I just wish I hadn&#39;t had to compete with him for listeners....</p>
+<p>Still, I had about 15 people come hang out and listen to me. I had great conversation with several of them before and after my talk. I&#39;ve been going into these things with the thought that if I get two people to legitimately listen to what I have to say, and I can legitimately help them, it is a win. In this case, I think I definitely met that goal, and I am pretty hungry to speak again soon.</p>
+<p>As much as I hate taking selfies, I did convince myself to take one on my way out of town. The squatty looking building in the background, the Gleacher Center, is where I spoke.</p>
+<p><img src="/static/images/chicagocoderconf.jpg" alt="Steven Hicks at Chicago Coder Conference"></p>
+<h4 id="slides">Slides</h4>
+<p><a href="/static/other/backends.pptx">Here are my slides from the talk.</a> They don&#39;t work very well on SlideShare because of all the animations, so here they are in all their PowerPoint glory.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/06/chicago-coder-conference</link><guid isPermaLink="true">blog/2016/06/chicago-coder-conference</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Fri, 10 Jun 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Maybe I was wrong about React]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Maybe I was wrong about React - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Maybe I was wrong about React</h1><div class="timestamp">April 7, 2016</div><article><h3 id="so-many-places-to-start">So many places to start</h3>
+<p>There are a lot of examples of how to set up a project with React, and very little direction on the best route. The first time I tried to do this, I ended up with a whole lot of analysis paralysis, and couldn&#39;t figure out where to even start.</p>
+<h3 id="it-depends-on-how-you-learn">It depends on how you learn</h3>
+<p>A lot of the advice you get on how to learn React and its ecosystem is to learn each individual piece, one thing at a time. Definitely DO NOT start with a &quot;starter kit&quot;, they say. That isn&#39;t going to teach you anything, they say.</p>
+<p>But suddenly in retrospect I&#39;m realizing, that is why I struggled so much the first time I tried to learn React. I am not that kind of learner. I am a &quot;give me a real live working example and I will tweak things until they break and learn from all the mistakes I make&quot; kind of learner.</p>
+<p>And what is the best way to fire up a working example of something? Yeoman. Find a generator that fits your tech stack, and start there.</p>
+<h3 id="yo-let-s-do-this">Yo let&#39;s do this</h3>
+<p>So off to <a href="http://yeoman.io/generators">yeoman.io/generators</a> we go...where we search for &#39;react&#39;, and get....tons....and tons....of results.</p>
+<p><img src="/static/images/yeoman-react.gif" alt="Yeoman React search"></p>
+<p>Looking through some of the results, I see one that has the things I&#39;m looking for - <a href="https://github.com/stylesuxx/generator-react-webpack-redux">react-webpack-redux</a>, which is really an extension of another generator, <a href="https://github.com/newtriks/generator-react-webpack">react-webpack</a>. The things I want out of the box, and the things this generator offers out of the box, are...</p>
+<ul>
+<li>Redux</li>
+<li>ES2015</li>
+<li>Unit testing</li>
+<li>Sass or Less</li>
+</ul>
+<h3 id="the-moment-of-truth">The moment of truth</h3>
+<p>So following the directions, we install the generator via npm, then generate a new site with yeoman.</p>
+<p><code>yo react-webpack-redux</code></p>
+<p>After answering a few questions for setup, comes the moment of truth. If all goes according to plan, I should be able to just start the app with</p>
+<p><code>pre npm start</code></p>
+<p>and HOLY CRAP I CAN AND IT JUST WORKS OH MY GEEZ HOW MUCH TIME DID I WASTE TRYING TO DO THIS THE LAST TIME!!!</p>
+<p><img src="/static/images/dancing_banana.gif" style="width:200px"></p>
+<h3 id="the-verdict-oh-my-goodness-this-actually-is-kind-of-easy-">The verdict - Oh my goodness this actually is kind of easy!</h3>
+<p>Well, jeez. This was so much easier than the first time I tried to set up a React project. I am very pleased. I am beyond very pleased. I am actually in complete disbelief and wish I had realized it could be this easy this the first time. This makes learning React a much more tolerable proposition.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/04/maybe-i-was-wrong-about-react</link><guid isPermaLink="true">blog/2016/04/maybe-i-was-wrong-about-react</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 07 Apr 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Ember looks neat]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Ember looks neat - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Ember looks neat</h1><div class="timestamp">March 24, 2016</div><article><h3 id="i-got-99-problems-and-98-of-them-are-javascript-mv-frameworks">I got 99 problems and 98 of them are javascript MV* frameworks</h3>
+<p>I am in the market for a new MV* framework in Javascript. I&#39;ve done Angular 1, many times. There are things I like about it - dependency injection is easy, meaning unit testing is easy; there is <a href="https://github.com/johnpapa/angular-styleguide">good guidance</a> on style and best practices; documentation is pretty great. There are also things I don&#39;t like about it - it can be slow; the digest cycle can make me want to rip my hair out at times; writing directives can be confusing and sometimes feels a little like throwing darts at a dartboard to see what sticks. But that ship has sailed, and there are too many other frameworks to stick with Angular 1 for life. I am a breadth of knowledge guy, not depth of knowledge - and the longer I stick with one framework, the more I feel like I&#39;m falling behind.</p>
+<h4 id="angular-2">Angular 2</h4>
+<p>The logical framework for me is Angular 2, right? I have all that Angular 1 experience. They&#39;ve now provided good <a href="https://angular.io/docs/ts/latest/guide/upgrade.html">guidance on migration</a>,which is way better than when it was announced, and we all thought we&#39;d be rewriting apps from scratch. But to be honest, I haven&#39;t looked into Angular 2 a whole lot, because when I look at the examples, the views look atrocious.</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">li</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"#hero of heroes"</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"onSelect(hero)"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"badge"</span>&gt;</span>{{hero.id}}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> {{hero.name}}
+<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">some-component</span> [<span class="hljs-attr">prop</span>]=<span class="hljs-string">"someExp"</span> (<span class="hljs-attr">event</span>)=<span class="hljs-string">"someEvent()"</span> [(<span class="hljs-attr">twoWayProp</span>)]=<span class="hljs-string">"someExp"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">show-title</span>&gt;</span></code></pre>
+
+<p>Good gracious, look at all those symbols. Maybe I&#39;m being a crybaby, but I can&#39;t imagine myself staring at views like that all day without (a) needing a cheat-sheet to tell me which symbol to use when, and (b) throwing up. I despise Markdown for its use of semantic symbols; the symbols in Angular 2 seem just as confusing to me.</p>
+<h4 id="that-react-it-s-so-hot-right-now-">That React, it&#39;s so hot right now!</h4>
+<p>First of all, most of what I&#39;ve learned so far about React, I&#39;ve learned from <a href="https://medium.com/@housecor">Cory House</a> - <a href="https://www.pluralsight.com/courses/react-flux-building-applications">his Pluralsight course</a> is a great place to start. This dude is an amazing speaker, and I highly recommend checking him out if you get a chance.</p>
+<p>I really like a lot of things about React.</p>
+<ul>
+<li>The virtualDom diffing is cool. Better performance is nothing to complain about.</li>
+<li>I like the concept of uni-directional flow. I&#39;ve played with both Flux and Redux, and before you get lawyery on me I know that&#39;s not technically part of React, but it is part of the ecosystem - and if you&#39;re going to build something with React, you&#39;re going to use either Flux or Redux because all of the examples do too. Flux is okay, but has too much boilerplate repetition for my tastes. Redux I find to be pretty neat - I like the <a href="http://redux.js.org/docs/introduction/ThreePrinciples.html">guiding principles</a> - a single source of truth, read-only state, and the use of pure functions.</li>
+<li>The language is simple, and it&#39;s pretty easy to figure out what&#39;s going on in a component.</li>
+<li>Jsx is awesome. I love the fact that you get a compile error when you typo something in a component - as opposed to something silently failing in most other frameworks.</li>
+</ul>
+<p>The dislikes list is much shorter....but the one item on the list is huge. Javascript tools fatigue is a real thing, and React is the ultimate example of it. I hope you like to have opinions about everything - cuz you&#39;re gonna need to. Setting up a project in React is a painful experience. React embraces the micro-library culture of npm - so you need to pick your own libraries for pretty much everything. If you&#39;re the kind of person who wants control over every..single..feature when you buy a new car, then React is going to make you happy. I am not one of those people. I am pretty happy to have three packages to choose from. I don&#39;t want to fill out a form for two hours choosing between 2 cupholders and 3. I want a car, and I want to drive it, and I don&#39;t much care for the details. Getting up and running with React can be a challenge, and one that makes me not want to use React.</p>
+<h4 id="ember">Ember</h4>
+<p>Which brings me to Ember. I don&#39;t know a whole lot about Ember. In fact, most of what I know, I learned from <a href="http://hanselminutes.com/516/ambitious-ux-and-ambitious-apps-with-ember-and-lauren-tan">one episode of HanselMinutes</a>.</p>
+<p>What I think I like the most about Ember is that it provides opinions for you. This is my biggest issue right now with JavaScript development - you need to have an opinion about everything. I am a breadth of knowledge guy, rather than depth of knowledge - as a result, I have more interest in learning the opinions prescribed by a framework than in forcing my own opinions onto a framework. I want my MV* framework to have opinions for me so that I can focus on building something.</p>
+<p>Heck, <a href="http://emberjs.com/">the slogan on their site</a> is &quot;more productive out of the box&quot;. That is a slogan I can get behind.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/03/emberLooksNeat</link><guid isPermaLink="true">blog/2016/03/emberLooksNeat</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 24 Mar 2016 05:00:00 GMT</pubDate></item><item><title><![CDATA[Static Site Generators Are The New WordPress]]></title><description><![CDATA[<!DOCTYPE html><html lang="en"><head><title>Static Site Generators Are The New WordPress - Steven J Hicks</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/static/css/site.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css"></head><body><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75007713-1', 'auto');
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Static Site Generators Are The New WordPress</h1><div class="timestamp">March 10, 2016</div><article><h3 id="static-site-generators-are-the-new-wordpress">Static Site Generators Are The New WordPress</h3>
+<p>I recently presented at the MKE Web Pros meetup group, about static site generators, and how you can build stupid simple websites with them.</p>
+<h4 id="slides">Slides</h4>
+<p>This is a less than ideal way to distribute slides - but the template for my slides uses a custom font, so it looks like garbage if I post them on slideshare. As a temporary solution, <a href="/static/pdf/staticgen.pdf">here they are as a pdf</a>.</p>
+<h4 id="summary">Summary</h4>
+<p>The dynamic CMS like WordPress is no longer the defacto answer to the statement &quot;I need a website&quot;. Static site generation can easily handle the needs of simple sites with infrequently changing content. Services are becoming more prevalent for adding interactive functionality to an otherwise static site - for example, Disqus for comments. And in many cases, where services can&#39;t be dropped directly onto your static site, a little technical courage and some javascript can get you what you need.</p>
+<p>Statically generated sites are much more performant and secure than a site run on a dynamic CMS. There are fewer moving parts, and since your content is literally served as static html files, fewer ways your site can be attacked.</p>
+<p>I would love to say static site generation is the answer for all sites. But it&#39;s not quite ready for your non-technical relative&#39;s site. Until content editing is more user-friendly, static site generation is probably only for your simplest sites or your most technical friends&#39; websites. As a general rule, if the content editor is not capable or ready to write content using a language like Markdown, static site generation might not be the answer.</p>
+<p>The good news is, we&#39;re headed toward a future where even your non-technical relative can publish content on a statically generated site. Services like Contentful and CloudCannon and plugins like Netlify-CMS are pushing in that direction. I don&#39;t think we&#39;re too far from a future where your non-technical relative can edit content in a WYSIWYG editor, click a button, and push changes to their statically generated site.</p>
+<p>Check out <a href="http://www.staticgen.com">staticgen.com</a> to get started with static site generation. There are way too many generators for me to recommend &quot;the perfect one&quot;. It is up to you to determine which generator works best for your scenario. For me, the answer is either HarpJs or Metalsmith. For you, the answer could be anything. Find the static generator for you, and let&#39;s start moving the web to a more performant and less vulnerable place.</p>
+</article><hr><div id="disqus_thread"><script>(function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//pleepleus88githubio.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>]]></description><link>blog/2016/03/staticgen</link><guid isPermaLink="true">blog/2016/03/staticgen</guid><dc:creator><![CDATA[Steven J Hicks]]></dc:creator><pubDate>Thu, 10 Mar 2016 06:00:00 GMT</pubDate></item></channel></rss>

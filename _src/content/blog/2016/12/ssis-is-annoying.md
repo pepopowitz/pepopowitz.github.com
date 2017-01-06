@@ -64,6 +64,8 @@ It crashes often - at least with Visual Studio 2015. Especially when you pull la
 
 When it crashes, it leaves a process running (SSIS Debug Host) that you have to kill before you can run it again.
 
+You can only have one Data Flow task open at one time. This is incredibly frustrating when you want to "copy" functionality across tasks.
+
 ### Conclusion
 
 SSIS, consider me unimpressed.
