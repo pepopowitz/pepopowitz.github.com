@@ -45,6 +45,11 @@ var pipeline = metalsmith(__dirname)
                 pattern: 'blog/**/*.{jade,md}',
                 sortBy: 'sortableDate',
                 reverse: true
+            },
+            engagements: {
+                pattern: 'speaking/engagements/**/*.md',
+                sortBy: 'sortableDate',
+                reverse: true
             }
         }
     ))

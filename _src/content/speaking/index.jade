@@ -1,0 +1,22 @@
+---
+title: Speaking - Steven J Hicks
+date: February 11, 2017
+layout: home.jade
+---
+
+.row.engagements
+    .col-lg-12
+        h3 Past Speaking Engagements
+        each engagement in collections.engagements
+            article.content-article
+                h4 #{engagement.talk}
+                if engagement.link
+                    h5
+                        a(href='#{engagement.link}') #{engagement.event}
+                else
+                    h5 #{engagement.event}
+                h6 #{engagement.location} - #{engagement.date}
+                if engagement.slides
+                    h6
+                        a(href='#{engagement.slides}') Slides
+

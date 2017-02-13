@@ -4,7 +4,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 ga('create', 'UA-75007713-1', 'auto');
-ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a></div></div></nav><div class="container"><h1>Mocking ES2015 modules</h1><div class="timestamp">January 5, 2017</div><article><p>If you&#39;re unit testing code that is using ES2015 modules [<a href="#footnotes">1</a>], you&#39;ll probably point want to mock dependencies at some point. For the most part this is just like mocking things in any code. My tool of choice right now is <a href="https://github.com/jupiter/simple-mock">simple-mock</a>, but there are gajillions of options.</p>
+ga('send', 'pageview');</script><nav class="navbar navbar-inverse navbar-fat navbar-default navbar-static-top"><div class="container-fluid"><div class="navbar-header"><a href="/" class="navbar-brand">Steven J Hicks</a><a href="/about" class="navbar-brand">About</a><a href="/speaking" class="navbar-brand">Speaking</a></div></div></nav><div class="container"><h1>Mocking ES2015 modules</h1><div class="timestamp">January 5, 2017</div><article><p>If you&#39;re unit testing code that is using ES2015 modules [<a href="#footnotes">1</a>], you&#39;ll probably point want to mock dependencies at some point. For the most part this is just like mocking things in any code. My tool of choice right now is <a href="https://github.com/jupiter/simple-mock">simple-mock</a>, but there are gajillions of options.</p>
 <h3 id="test-induced-damage">Test-induced damage</h3>
 <p>There is some test-induced damage that my team has come to accept with simple-mock, and I am guessing it would be an issue with other mocking libraries like it. While simple-mock is great for mocking functions that are properties on exported objects, it seemed difficult to mock standalone/named exported functions from dependencies.</p>
 <p>So we found this to be easy: [<a href="#footnotes">2</a>]</p>
@@ -138,4 +138,4 @@ describe(<span class="hljs-string">'feature'</span>, <span class="hljs-function"
     s.src = '//pleepleus88githubio.disqus.com/embed.js';
     s.setAttribute('data-timestamp', +new Date());
     (d.head || d.body).appendChild(s);
-})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/">metalsmith.io.</a></h6></footer></div></body></html>
+})();</script></div><footer class="row"><hr><h6 class="pull-left">&copy; Steven J Hicks 2017.</h6><h6 class="pull-right">I built this site with<a href="http://www.metalsmith.io/"> metalsmith.io.</a></h6></footer></div></body></html>
